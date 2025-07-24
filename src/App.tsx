@@ -3,15 +3,16 @@ import LoginPage from "./pages/LoginPage";
 import PrivateRoute from "./routes/PrivateRoute";
 import TestePage from "./pages/TestePage";
 import PublicCatalogPage from "./pages/PublicCatalogPage";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   return <BrowserRouter>
     <Routes>
       <Route path="/" element={<PublicCatalogPage/>}/>
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/teste" element={
+      <Route path="/admin" element={
         <PrivateRoute>
-          <TestePage/>
+          <AdminDashboard/>
         </PrivateRoute>
       }/>
     </Routes>
