@@ -20,7 +20,7 @@ export const login = createAsyncThunk(
   async (credentials: { username: string; password: string }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post('/login/', credentials);
-      return response.data.token;
+      return response.data.access;
     } catch (err: any) {
       return rejectWithValue(err.response?.data?.detail || 'Erro no login');
     }
