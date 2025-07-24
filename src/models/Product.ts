@@ -6,6 +6,6 @@ export default interface Product {
   description: string;
   image_url: string;
   price: string;
-  category: Cateogry;
+  category_id: Cateogry;
   active: boolean;
 }
