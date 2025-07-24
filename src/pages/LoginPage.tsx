@@ -60,7 +60,7 @@ const LoginPage: React.FC = () => {
   return (
     <Container>
       <Form onSubmit={handleSubmit}>
-        <h2>🔒 Login</h2>
+        <h2>Login</h2>
 
         {error && <ErrorMessage>{error}</ErrorMessage>}
 
