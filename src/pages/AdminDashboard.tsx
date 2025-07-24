@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../app/hooks';
-import axios from '../api/axios';
-import styled from 'styled-components';
+import React, { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import axios from "../api/axios";
+import styled from "styled-components";
+
+import ProductForm from "../components/ProductForm";
 
 const Page = styled.div`
   padding: 2rem;
@@ -30,7 +32,7 @@ const Table = styled.table`
   background: white;
   border-radius: 1rem;
   overflow: hidden;
-  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 `;
 
 const Th = styled.th`
@@ -49,14 +51,17 @@ const AdminDashboard = () => {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const [showForm, setShowForm] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<any | null>(null);
+
   useEffect(() => {
     const fetchAdminProducts = async () => {
       try {
-        const response = await axios.get('/products/');
+        const response = await axios.get("/products/");
         setProducts(response.data);
         console.log(response);
       } catch (error) {
-        console.error('Erro ao buscar produtos no admin:', error);
+        console.error("Erro ao buscar produtos no admin:", error);
       } finally {
         setLoading(false);
       }
@@ -69,8 +74,25 @@ const AdminDashboard = () => {
     <Page>
       <Header>
         <h1>Painel Administrativo - Em fase de testes XD</h1>
-        <Button onClick={() => alert('Criar produto (form vendrá depois)')}>+ Novo Produto</Button>
+        <Button
+          onClick={() => {
+            setEditingProduct(null);
+            setShowForm(true);
+          }}
+        >
+          + Novo Produto
+        </Button>
       </Header>
+
+      {showForm && (
+        <ProductForm
+          initialData={editingProduct}
+          onSuccess={() => {
+            setShowForm(false);
+            window.location.reload(); // recarrega lista
+          }}
+        />
+      )}
 
       {loading ? (
         <p>Carregando produtos...</p>
@@ -91,10 +113,22 @@ const AdminDashboard = () => {
                 <Td>{prod.name}</Td>
                 <Td>R$ {prod.price}</Td>
                 <Td>{prod.stock}</Td>
-                <Td>{prod.active ? 'Ativo' : 'Inativo'}</Td>
+                <Td>{prod.active ? "Ativo" : "Inativo"}</Td>
                 <Td>
-                  <Button onClick={() => alert('Editar produto (daqui a pouco)')}>Editar</Button>{' '}
-                  <Button onClick={() => alert('Excluir produto (daqui a pouco xd)')}>Excluir</Button>
+                  <Button
+                    onClick={() => {
+                      setEditingProduct(prod);
+                      setShowForm(true);
+                    }}
+                  >
+                    Editar
+                  </Button>
+                  {" "}
+                  <Button
+                    onClick={() => alert("Excluir produto (daqui a pouco xd)")}
+                  >
+                    Excluir
+                  </Button>
                 </Td>
               </tr>
             ))}
