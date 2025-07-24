@@ -1,5 +1,12 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import LoginPage from "./pages/LoginPage";
+
 function App() {
-  return <h1>Catálogo de Produtos</h1>;
+  return <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<h1>Alo alo, tá funfando?</h1>}/>
+    </Routes>
+  </BrowserRouter>
 }
 
 export default App;
