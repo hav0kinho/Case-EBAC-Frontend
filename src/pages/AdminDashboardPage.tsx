@@ -70,6 +70,20 @@ const AdminDashboard = () => {
     fetchAdminProducts();
   }, []);
 
+  const deleteProduct = async (productId: number) => {
+    const confirm = window.confirm(
+      "Tem certeza que deseja excluir este produto?"
+    );
+    if (!confirm) return;
+
+    try {
+      await axios.delete(`/products/${productId}/`);
+      setProducts((prev) => prev.filter((p) => p.id !== productId));
+    } catch (error) {
+      console.error("Erro ao excluir produto:", error);
+    }
+  };
+
   return (
     <Page>
       <Header>
@@ -122,10 +136,10 @@ const AdminDashboard = () => {
                     }}
                   >
                     Editar
-                  </Button>
-                  {" "}
+                  </Button>{" "}
                   <Button
-                    onClick={() => alert("Excluir produto (daqui a pouco xd)")}
+                    onClick={() => deleteProduct(prod.id)}
+                    style={{ backgroundColor: "#c62828" }}
                   >
                     Excluir
                   </Button>
