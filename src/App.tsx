@@ -7,6 +7,8 @@ import AdminDashboard from "./pages/AdminDashboardPage";
 import AdminCategoriesPage from "./pages/AdminCategoriesPage";
 import RegisterPage from './pages/RegisterPage';
 
+import "./styles/global.css";
+
 function App() {
   return (
     <BrowserRouter>
