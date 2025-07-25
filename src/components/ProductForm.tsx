@@ -55,7 +55,7 @@ const ProductForm = ({ initialData, onSuccess }: ProductFormProps) => {
   const [price, setPrice] = useState(initialData?.price || "");
   const [stock, setStock] = useState(initialData?.stock || "");
   const [image_url, setImageURL] = useState(initialData?.image_url || "");
-  const [category, setCategory] = useState(initialData?.category || "");
+  const [category, setCategory] = useState(initialData?.category?.id || "");
   const [categories, setCategories] = useState<any[]>([]);
   const [active, setActive] = useState(initialData?.active ?? true);
 
