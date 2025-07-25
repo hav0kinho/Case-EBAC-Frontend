@@ -3,6 +3,8 @@
 
 Este é o front-end da aplicação **Huellysin Store**, um catálogo de produtos com painel administrativo. A interface é construída com React + Redux Toolkit + TypeScript, conectando-se a uma API Django REST com autenticação via JWT.
 
+<img src="./public/projetoFuncionando.png"/>
+
 ---
 
 ## 🖼️ Tecnologias Utilizadas
