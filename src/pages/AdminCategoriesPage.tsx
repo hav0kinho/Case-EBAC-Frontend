@@ -1,6 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import axios from '../api/axios';
-import styled from 'styled-components';
+import React, { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import axios from "../api/axios";
+import styled from "styled-components";
+
+import { logout } from "../app/reducers/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   padding: 2rem;
@@ -38,7 +42,7 @@ const Input = styled.input`
 `;
 
 const Button = styled.button`
-  background-color: ${(props) => props.color || '#2e7d32'};
+  background-color: ${(props) => props.color || "#2e7d32"};
   color: white;
   padding: 0.6rem 1.2rem;
   border: none;
@@ -47,12 +51,15 @@ const Button = styled.button`
 `;
 
 const AdminCategoriesPage = () => {
+  const dispatch = useAppDispatch(); // Daqui a pouco a gente vê isso
+  const navigate = useNavigate();
+
   const [categories, setCategories] = useState<any[]>([]);
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const [editingId, setEditingId] = useState<number | null>(null);
 
   const fetchCategories = async () => {
-    const res = await axios.get('/categories/');
+    const res = await axios.get("/categories/");
     setCategories(res.data);
   };
 
@@ -66,13 +73,13 @@ const AdminCategoriesPage = () => {
       if (editingId) {
         await axios.put(`/categories/${editingId}/`, { name });
       } else {
-        await axios.post('/categories/', { name });
+        await axios.post("/categories/", { name });
       }
-      setName('');
+      setName("");
       setEditingId(null);
       fetchCategories();
     } catch (err) {
-      console.error('Erro ao salvar categoria:', err);
+      console.error("Erro ao salvar categoria:", err);
     }
   };
 
@@ -82,32 +89,53 @@ const AdminCategoriesPage = () => {
   };
 
   const handleDelete = async (id: number) => {
-    if (!window.confirm('Deseja realmente excluir esta categoria?')) return;
+    if (!window.confirm("Deseja realmente excluir esta categoria?")) return;
     try {
       await axios.delete(`/categories/${id}/`);
       fetchCategories();
     } catch (err) {
-      console.error('Erro ao excluir categoria:', err);
+      console.error("Erro ao excluir categoria:", err);
     }
   };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/");
+  };
+
+  const handleReturn = () => {
+    navigate("/");
+  }
 
   return (
     <Container>
       <Title>Gerenciar Categorias</Title>
 
-      <Form onSubmit={handleSubmit}>
+      <Button onClick={handleLogout} style={{ backgroundColor: "#f44336" }}>
+        Logout
+      </Button>
+
+      <Button onClick={handleReturn} style={{ backgroundColor: "#257ed1ff" }}>
+        Voltar para Catálogo
+      </Button>
+
+     <Form onSubmit={handleSubmit}>
         <Input
           placeholder="Nome da categoria"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
         />
-        <Button type="submit">{editingId ? 'Salvar' : 'Adicionar'}</Button>
+        <Button type="submit">{editingId ? "Salvar" : "Adicionar"}</Button>
         {editingId && (
-          <Button type="button" color="#757575" onClick={() => {
-            setEditingId(null);
-            setName('');
-          }}>
+          <Button
+            type="button"
+            color="#757575"
+            onClick={() => {
+              setEditingId(null);
+              setName("");
+            }}
+          >
             Cancelar
           </Button>
         )}
@@ -117,9 +145,17 @@ const AdminCategoriesPage = () => {
         {categories.map((cat) => (
           <ListItem key={cat.id}>
             <span>{cat.name}</span>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <Button type="button" onClick={() => handleEdit(cat)}>Editar</Button>
-              <Button type="button" color="#c62828" onClick={() => handleDelete(cat.id)}>Excluir</Button>
+            <div style={{ display: "flex", gap: "0.5rem" }}>
+              <Button type="button" onClick={() => handleEdit(cat)}>
+                Editar
+              </Button>
+              <Button
+                type="button"
+                color="#c62828"
+                onClick={() => handleDelete(cat.id)}
+              >
+                Excluir
+              </Button>
             </div>
           </ListItem>
         ))}

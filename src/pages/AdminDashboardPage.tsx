@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import axios from "../api/axios";
 import styled from "styled-components";
+import { logout } from "../app/reducers/authSlice";
+import { useNavigate } from "react-router-dom";
 
 import ProductForm from "../components/ProductForm";
 
@@ -48,6 +50,8 @@ const Td = styled.td`
 
 const AdminDashboard = () => {
   const dispatch = useAppDispatch(); // Daqui a pouco a gente vê isso
+  const navigate = useNavigate();
+
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -84,10 +88,31 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/");
+  };
+
+    const handleReturn = () => {
+    navigate("/");
+  }
+
   return (
     <Page>
       <Header>
         <h1>Painel Administrativo - Em fase de testes XD</h1>
+
+
+      <Button onClick={handleReturn} style={{ backgroundColor: "#257ed1ff" }}>
+        Voltar para Catálogo
+      </Button>
+
+        <Button
+          onClick={handleLogout}
+          style={{ backgroundColor: "#f44336" }}
+        >
+          Logout
+        </Button>
         <Button
           onClick={() => {
             setEditingProduct(null);

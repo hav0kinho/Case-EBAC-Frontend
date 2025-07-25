@@ -52,7 +52,7 @@ const ProductForm = ({ initialData, onSuccess }: ProductFormProps) => {
   const [description, setDescription] = useState(initialData?.description || '');
   const [price, setPrice] = useState(initialData?.price || '');
   const [stock, setStock] = useState(initialData?.stock || '');
-  const [image, setImage] = useState(initialData?.image || '');
+  const [image_url, setImageURL] = useState(initialData?.image || '');
   const [category_id, setCategoryId] = useState(initialData?.category || '');
   const [categories, setCategories] = useState<any[]>([]);
   const [active, setActive] = useState(initialData?.active ?? true);
@@ -67,7 +67,7 @@ const ProductForm = ({ initialData, onSuccess }: ProductFormProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const payload = { name, description, price, stock, image, category_id, active };
+    const payload = { name, description, price, stock, image_url, category_id, active };
     try {
       if (initialData) {
         await axios.put(`/products/${initialData.id}/`, payload);
@@ -96,7 +96,7 @@ const ProductForm = ({ initialData, onSuccess }: ProductFormProps) => {
       <Input type="number" value={stock} onChange={(e) => setStock(e.target.value)} required />
 
       <Label>Imagem (URL)</Label>
-      <Input value={image} onChange={(e) => setImage(e.target.value)} required />
+      <Input value={image_url} onChange={(e) => setImageURL(e.target.value)} required />
 
       <Label>Categoria</Label>
       <Select value={category_id} onChange={(e) => setCategoryId(e.target.value)} required>

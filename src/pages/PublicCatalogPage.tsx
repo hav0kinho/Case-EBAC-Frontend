@@ -1,18 +1,24 @@
-import { useEffect } from 'react';
-import { fetchPublicProducts } from "../app/reducers/productSlice"
-import { useAppDispatch, useAppSelector } from '../app/hooks';
-import styled from 'styled-components';
+import { useEffect, useMemo, useState } from "react";
+import { fetchPublicProducts } from "../app/reducers/productSlice";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { type RootState } from "../app/store";
+import styled from "styled-components";
+import type Category from "../models/Category";
+import type Product from "../models/Product";
+import axios from "../api/axios"; // seu axios configurado
 
 const Wrapper = styled.div`
   min-height: 100vh;
   background-color: #f0f2f5;
   padding: 2rem;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
 `;
 
 const Header = styled.header`
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 
   h1 {
     font-size: 2.5rem;
@@ -35,7 +41,7 @@ const Grid = styled.div`
 const Card = styled.div`
   background: #fff;
   border-radius: 1rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   overflow: hidden;
   display: flex;
@@ -43,7 +49,7 @@ const Card = styled.div`
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
   }
 `;
 
@@ -51,8 +57,6 @@ const Img = styled.img`
   width: 100%;
   height: 180px;
   object-fit: cover;
-  border-top-left-radius: 1rem;
-  border-top-right-radius: 1rem;
 `;
 
 const Info = styled.div`
@@ -78,26 +82,95 @@ const Price = styled.div`
   font-weight: bold;
 `;
 
+const Select = styled.select`
+  margin-bottom: 2rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #ccc;
+`;
+
 const PublicCatalogPage = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { products, loading, error } = useAppSelector((state) => state.product);
+  const token = useSelector((state: RootState) => state.auth.token);
+
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
 
   useEffect(() => {
     dispatch(fetchPublicProducts());
   }, [dispatch]);
+
+  const filteredProducts = selectedCategoryId
+    ? products.filter((p) => p.category?.id === selectedCategoryId)
+    : products;
+
+  const getUniqueCategories = () => {
+    const seen = new Set<number>();
+    const unique: { id: number; name: string }[] = [];
+
+    for (const prod of products) {
+      const cat = prod.category;
+      if (cat && typeof cat.id === "number" && !seen.has(cat.id)) {
+        seen.add(cat.id);
+        unique.push(cat);
+      }
+    }
+
+    return unique;
+  };
+
+  const categories = getUniqueCategories();
 
   return (
     <Wrapper>
       <Header>
         <h1>Huellysin Store - Catálogo de Produtos</h1>
         <p>Confira os produtos disponíveis em nossa loja</p>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            padding: "1rem",
+            borderBottom: "1px solid #ccc",
+          }}
+        >
+          {token ? (
+            <button onClick={() => navigate("/admin")} style={{ padding: "0.5rem 1rem" }}>
+              Painel
+            </button>
+          ) : (
+            <button onClick={() => navigate("/login")} style={{ padding: "0.5rem 1rem" }}>
+              Login
+            </button>
+          )}
+        </div>
       </Header>
 
+      {/* Dropdown de categorias */}
+      <Select
+        onChange={(e) => {
+          const value = e.target.value;
+          setSelectedCategoryId(value ? parseInt(value) : null);
+        }}
+        value={selectedCategoryId ?? ""}
+      >
+        <option value="">Todas as categorias</option>
+        {categories.map((cat) => (
+          <option key={cat.id} value={cat.id}>
+            {cat.name}
+          </option>
+        ))}
+      </Select>
+
       {loading && <p>Carregando produtos...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
       <Grid>
-        {products.map((product) => (
+        {filteredProducts.map((product) => (
           <Card key={product.id}>
             <Img src={product.image_url} alt={product.name} />
             <Info>

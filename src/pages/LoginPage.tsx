@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { login } from '../app/reducers/authSlice';
-import styled from 'styled-components';
+import React, { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { login } from "../app/reducers/authSlice";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
 const Container = styled.div`
   display: flex;
@@ -15,7 +16,7 @@ const Form = styled.form`
   background: white;
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 400px;
 `;
@@ -47,15 +48,23 @@ const ErrorMessage = styled.p`
 
 const LoginPage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { loading, error } = useAppSelector(state => state.auth);
+  const navigate = useNavigate();
+  const { loading, error, token } = useAppSelector((state) => state.auth);
 
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(login({ username, password }));
   };
+
+  // Impressionante quanto isso ficou simples xd
+  useEffect(() => {
+    if (token) {
+      navigate("/admin");
+    }
+  }, [token, navigate]);
 
   return (
     <Container>
@@ -81,7 +90,7 @@ const LoginPage: React.FC = () => {
         />
 
         <Button type="submit" disabled={loading}>
-          {loading ? 'Entrando...' : 'Entrar'}
+          {loading ? "Entrando..." : "Entrar"}
         </Button>
       </Form>
     </Container>

@@ -1,4 +1,4 @@
-import type Cateogry from "./Category";
+import type Category from "./Category";
 
 export default interface Product {
   id: number;
@@ -6,6 +6,6 @@ export default interface Product {
   description: string;
   image_url: string;
   price: string;
-  category_id: Cateogry;
+  category: Category;
   active: boolean;
 }

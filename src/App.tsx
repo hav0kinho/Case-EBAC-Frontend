@@ -5,6 +5,7 @@ import TestePage from "./pages/TestePage";
 import PublicCatalogPage from "./pages/PublicCatalogPage";
 import AdminDashboard from "./pages/AdminDashboardPage";
 import AdminCategoriesPage from "./pages/AdminCategoriesPage";
+import RegisterPage from './pages/RegisterPage';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<PublicCatalogPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route
           path="/admin"
           element={
