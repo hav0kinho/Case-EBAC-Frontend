@@ -11,6 +11,7 @@ import { ActionButton } from "../components/ActionButton";
 import type Category from "../models/Category";
 import type Product from "../models/Product";
 import axios from "../api/axios"; // seu axios configurado
+import { logout } from "../app/reducers/authSlice";
 
 const Wrapper = styled.div`
   min-height: 100vh;
@@ -125,6 +126,10 @@ const PublicCatalogPage = () => {
 
     return unique;
   };
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/");
+  };
 
   const categories = getUniqueCategories();
 
@@ -154,27 +159,41 @@ const PublicCatalogPage = () => {
               {token ? (
                 <ActionButton
                   onClick={() => navigate("/admin")}
-                  style={{ padding: "1rem 2rem" }}
+                  style={{ padding: "1rem 2rem", width: "150px" }}
                 >
                   Painel
                 </ActionButton>
               ) : (
                 <ActionButton
                   onClick={() => navigate("/login")}
-                  style={{ padding: "1rem 2rem" }}
+                  style={{ padding: "1rem 2rem", width: "150px" }}
                 >
-                  Login
+                  Logar
                 </ActionButton>
               )}
             </div>
             <div>
-              <ActionButton
-                onClick={() => navigate("/register")}
-                style={{ padding: "1rem 2rem", backgroundColor: "#246418ff" }}
-              >
-                Registrar-se
-              </ActionButton>
+              {!token && (
+                <ActionButton
+                  onClick={() => navigate("/register")}
+                  style={{
+                    padding: "1rem 2rem",
+                    backgroundColor: "#246418ff",
+                    width: "150px",
+                  }}
+                >
+                  Registrar
+                </ActionButton>
+              )}
             </div>
+            {token && (
+              <ActionButton
+                onClick={handleLogout}
+                style={{ padding: "1rem 2rem", backgroundColor: "#8b2a2aff", width: "150px" }}
+              >
+                Logout
+              </ActionButton>
+            )}
           </div>
         </div>
       </Header>
