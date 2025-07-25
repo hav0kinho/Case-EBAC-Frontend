@@ -5,6 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { type RootState } from "../app/store";
 import styled from "styled-components";
+
+import { ActionButton } from "../components/ActionButton";
+
 import type Category from "../models/Category";
 import type Product from "../models/Product";
 import axios from "../api/axios"; // seu axios configurado
@@ -139,13 +142,13 @@ const PublicCatalogPage = () => {
           }}
         >
           {token ? (
-            <button onClick={() => navigate("/admin")} style={{ padding: "0.5rem 1rem" }}>
+            <ActionButton onClick={() => navigate("/admin")} style={{ padding: "1rem 2rem" }}>
               Painel
-            </button>
+            </ActionButton>
           ) : (
-            <button onClick={() => navigate("/login")} style={{ padding: "0.5rem 1rem" }}>
+            <ActionButton onClick={() => navigate("/login")} style={{ padding: "1rem 2rem" }}>
               Login
-            </button>
+            </ActionButton>
           )}
         </div>
       </Header>

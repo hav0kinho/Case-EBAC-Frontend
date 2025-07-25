@@ -71,6 +71,8 @@ const LoginPage: React.FC = () => {
       <Form onSubmit={handleSubmit}>
         <h2>Login</h2>
 
+        <br/>
+
         {error && <ErrorMessage>{error}</ErrorMessage>}
 
         <Input

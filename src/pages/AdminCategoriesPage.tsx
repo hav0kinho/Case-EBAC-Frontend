@@ -5,6 +5,7 @@ import styled from "styled-components";
 
 import { logout } from "../app/reducers/authSlice";
 import { useNavigate } from "react-router-dom";
+import { ActionButton } from "../components/ActionButton";
 
 const Container = styled.div`
   padding: 2rem;
@@ -41,13 +42,18 @@ const Input = styled.input`
   border-radius: 0.5rem;
 `;
 
-const Button = styled.button`
-  background-color: ${(props) => props.color || "#2e7d32"};
+const Button = styled.button<{ color?: string; hoverColor?: string }>`
+  background-color: ${(props) => props.color || "#5067ecff"};
   color: white;
-  padding: 0.6rem 1.2rem;
   border: none;
+  padding: 0.6rem 1rem;
   border-radius: 0.5rem;
+  font-weight: bold;
   cursor: pointer;
+
+  &:hover {
+    background-color: ${(props) => props.hoverColor || "#3e50b6ff"};
+  }
 `;
 
 const AdminCategoriesPage = () => {
@@ -98,35 +104,26 @@ const AdminCategoriesPage = () => {
     }
   };
 
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/");
+  const handleReturnToProducts = () => {
+    navigate("/admin");
   };
-
-  const handleReturn = () => {
-    navigate("/");
-  }
 
   return (
     <Container>
       <Title>Gerenciar Categorias</Title>
 
-      <Button onClick={handleLogout} style={{ backgroundColor: "#f44336" }}>
-        Logout
-      </Button>
+      <ActionButton onClick={handleReturnToProducts}>
+        Voltar para Painel Administrativo
+      </ActionButton>
 
-      <Button onClick={handleReturn} style={{ backgroundColor: "#257ed1ff" }}>
-        Voltar para Catálogo
-      </Button>
-
-     <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit}>
         <Input
           placeholder="Nome da categoria"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
         />
-        <Button type="submit">{editingId ? "Salvar" : "Adicionar"}</Button>
+        <Button type="submit" color="#1f8016ff" hoverColor="#11470cff">{editingId ? "Salvar" : "Adicionar"}</Button>
         {editingId && (
           <Button
             type="button"
@@ -150,9 +147,9 @@ const AdminCategoriesPage = () => {
                 Editar
               </Button>
               <Button
-                type="button"
-                color="#c62828"
                 onClick={() => handleDelete(cat.id)}
+                color="#e62f2fff"
+                hoverColor="#c42b2bff"
               >
                 Excluir
               </Button>

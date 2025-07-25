@@ -6,6 +6,8 @@ import { logout } from "../app/reducers/authSlice";
 import { useNavigate } from "react-router-dom";
 
 import ProductForm from "../components/ProductForm";
+import { ActionButton } from "../components/ActionButton";
+import { ProductFormModal } from "../components/ProductFormModal";
 
 const Page = styled.div`
   padding: 2rem;
@@ -18,14 +20,18 @@ const Header = styled.div`
   margin-bottom: 2rem;
 `;
 
-const Button = styled.button`
-  background-color: #3f51b5;
+const Button = styled.button<{color?: string, hoverColor?: string}>`
+  background-color: ${(props) => props.color || "#5067ecff"};
   color: white;
   border: none;
   padding: 0.6rem 1rem;
   border-radius: 0.5rem;
   font-weight: bold;
   cursor: pointer;
+
+  &:hover {
+    background-color: ${(props) => props.hoverColor || "#3e50b6ff"};
+  }
 `;
 
 const Table = styled.table`
@@ -52,6 +58,8 @@ const AdminDashboard = () => {
   const dispatch = useAppDispatch(); // Daqui a pouco a gente vê isso
   const navigate = useNavigate();
 
+  const [modalOpen, setModalOpen] = useState(false);
+
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -63,7 +71,6 @@ const AdminDashboard = () => {
       try {
         const response = await axios.get("/products/");
         setProducts(response.data);
-        console.log(response);
       } catch (error) {
         console.error("Erro ao buscar produtos no admin:", error);
       } finally {
@@ -93,36 +100,28 @@ const AdminDashboard = () => {
     navigate("/");
   };
 
-    const handleReturn = () => {
+  const handleReturn = () => {
     navigate("/");
-  }
+  };
 
   return (
     <Page>
       <Header>
-        <h1>Painel Administrativo - Em fase de testes XD</h1>
-
-
-      <Button onClick={handleReturn} style={{ backgroundColor: "#257ed1ff" }}>
-        Voltar para Catálogo
-      </Button>
-
-        <Button
-          onClick={handleLogout}
-          style={{ backgroundColor: "#f44336" }}
-        >
-          Logout
-        </Button>
-        <Button
-          onClick={() => {
-            setEditingProduct(null);
-            setShowForm(true);
-          }}
-        >
-          + Novo Produto
-        </Button>
+        <h1>Painel Administrativo</h1>
+        <div>
+          <ActionButton onClick={() => setModalOpen(true)}>
+            + Novo Produto
+          </ActionButton>
+          {" "}
+          <ActionButton onClick={() => navigate("/admin/categories")}>
+            + Nova Categoria
+          </ActionButton>
+        </div>
       </Header>
-
+      <Button onClick={handleReturn}>Voltar para Catálogo</Button>{" "}
+      <Button onClick={handleLogout} color="#f44336" hoverColor="#b43229ff">
+        Logout
+      </Button>
       {showForm && (
         <ProductForm
           initialData={editingProduct}
@@ -132,7 +131,8 @@ const AdminDashboard = () => {
           }}
         />
       )}
-
+      <br />
+      <br />
       {loading ? (
         <p>Carregando produtos...</p>
       ) : (
@@ -164,7 +164,8 @@ const AdminDashboard = () => {
                   </Button>{" "}
                   <Button
                     onClick={() => deleteProduct(prod.id)}
-                    style={{ backgroundColor: "#c62828" }}
+                    color="#e62f2fff"
+                    hoverColor="#c42b2bff"
                   >
                     Excluir
                   </Button>
@@ -174,6 +175,7 @@ const AdminDashboard = () => {
           </tbody>
         </Table>
       )}
+      <ProductFormModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </Page>
   );
 };
