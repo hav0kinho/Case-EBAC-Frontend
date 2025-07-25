@@ -99,7 +99,9 @@ const PublicCatalogPage = () => {
   const { products, loading, error } = useAppSelector((state) => state.product);
   const token = useSelector((state: RootState) => state.auth.token);
 
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
+    null
+  );
 
   useEffect(() => {
     dispatch(fetchPublicProducts());
@@ -134,22 +136,46 @@ const PublicCatalogPage = () => {
 
         <div
           style={{
+            marginTop: "1rem",
             display: "flex",
-            justifyContent: "flex-end",
-            alignItems: "center",
+            justifyContent: "center",
             padding: "1rem",
             borderBottom: "1px solid #ccc",
           }}
         >
-          {token ? (
-            <ActionButton onClick={() => navigate("/admin")} style={{ padding: "1rem 2rem" }}>
-              Painel
-            </ActionButton>
-          ) : (
-            <ActionButton onClick={() => navigate("/login")} style={{ padding: "1rem 2rem" }}>
-              Login
-            </ActionButton>
-          )}
+          <div
+            style={{
+              width: "500px",
+              display: "flex",
+              justifyContent: "space-around",
+            }}
+          >
+            <div>
+              {token ? (
+                <ActionButton
+                  onClick={() => navigate("/admin")}
+                  style={{ padding: "1rem 2rem" }}
+                >
+                  Painel
+                </ActionButton>
+              ) : (
+                <ActionButton
+                  onClick={() => navigate("/login")}
+                  style={{ padding: "1rem 2rem" }}
+                >
+                  Login
+                </ActionButton>
+              )}
+            </div>
+            <div>
+              <ActionButton
+                onClick={() => navigate("/register")}
+                style={{ padding: "1rem 2rem", backgroundColor: "#246418ff" }}
+              >
+                Registrar-se
+              </ActionButton>
+            </div>
+          </div>
         </div>
       </Header>
 
