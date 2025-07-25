@@ -89,8 +89,20 @@ const RegisterPage = () => {
 
     if (!form.password) {
       errors.password = "A senha é obrigatória.";
-    } else if (form.password.length < 8) {
-      errors.password = "A senha deve ter no mínimo 8 caracteres.";
+    } else {
+      const password = form.password;
+
+      if (password.length < 8) {
+        errors.password = "A senha deve ter no mínimo 8 caracteres.";
+      } else {
+        const strongPasswordRegex =
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&\-_.])[A-Za-z\d@$!%*?&\-_.]+$/;
+
+        if (!strongPasswordRegex.test(password)) {
+          errors.password =
+            "A senha deve conter pelo menos uma letra maiúscula, uma minúscula, um número e um caractere especial.";
+        }
+      }
     }
 
     if (!form.password2) {
@@ -101,7 +113,6 @@ const RegisterPage = () => {
 
     return errors;
   };
-
   return (
     <Container>
       <Title>Registrar Conta</Title>
@@ -139,6 +150,5 @@ const RegisterPage = () => {
     </Container>
   );
 };
-
 
 export default RegisterPage;
