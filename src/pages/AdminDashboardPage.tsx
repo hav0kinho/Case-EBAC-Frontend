@@ -20,7 +20,7 @@ const Header = styled.div`
   margin-bottom: 2rem;
 `;
 
-const Button = styled.button<{color?: string, hoverColor?: string}>`
+const Button = styled.button<{ color?: string; hoverColor?: string }>`
   background-color: ${(props) => props.color || "#5067ecff"};
   color: white;
   border: none;
@@ -63,7 +63,7 @@ const AdminDashboard = () => {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const [showForm, setShowForm] = useState(false);
+  // const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any | null>(null);
 
   useEffect(() => {
@@ -109,10 +109,14 @@ const AdminDashboard = () => {
       <Header>
         <h1>Painel Administrativo</h1>
         <div>
-          <ActionButton onClick={() => setModalOpen(true)}>
+          <ActionButton
+            onClick={() => {
+              setModalOpen(true);
+              setEditingProduct(null);
+            }}
+          >
             + Novo Produto
-          </ActionButton>
-          {" "}
+          </ActionButton>{" "}
           <ActionButton onClick={() => navigate("/admin/categories")}>
             + Nova Categoria
           </ActionButton>
@@ -122,7 +126,7 @@ const AdminDashboard = () => {
       <Button onClick={handleLogout} color="#f44336" hoverColor="#b43229ff">
         Logout
       </Button>
-      {showForm && (
+      {/* {showForm && (
         <ProductForm
           initialData={editingProduct}
           onSuccess={() => {
@@ -130,7 +134,7 @@ const AdminDashboard = () => {
             window.location.reload(); // recarrega lista
           }}
         />
-      )}
+      )} */}
       <br />
       <br />
       {loading ? (
@@ -157,7 +161,7 @@ const AdminDashboard = () => {
                   <Button
                     onClick={() => {
                       setEditingProduct(prod);
-                      setShowForm(true);
+                      setModalOpen(true);
                     }}
                   >
                     Editar
@@ -175,7 +179,11 @@ const AdminDashboard = () => {
           </tbody>
         </Table>
       )}
-      <ProductFormModal open={modalOpen} onClose={() => setModalOpen(false)} />
+      <ProductFormModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        productToEdit={editingProduct}
+      />
     </Page>
   );
 };
